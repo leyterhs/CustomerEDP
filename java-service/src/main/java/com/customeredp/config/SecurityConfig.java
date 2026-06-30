@@ -30,10 +30,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/register", "/api/auth/login", "/swagger-ui/**", "/api-docs/**").permitAll()
-                .anyRequest().authenticated()
-            )
+			.authorizeHttpRequests(authz -> authz
+				.requestMatchers("/api/auth/register", "/api/auth/login", "/swagger-ui/**", "/api-docs/**").permitAll()
+				.requestMatchers("/api/admin/**").hasRole("ADMIN")
+				.anyRequest().authenticated()
+			)
             .userDetailsService(customUserDetailsService)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
