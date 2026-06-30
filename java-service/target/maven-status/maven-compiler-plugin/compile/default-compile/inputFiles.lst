@@ -1,3 +1,4 @@
+C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\config\OpenApiConfig.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\config\SecurityConfig.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\controller\AuthController.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\controller\ClientController.java
@@ -14,6 +15,8 @@ C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\repository
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\repository\DeliveryRepository.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\repository\EngagementRepository.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\repository\MemberRepository.java
+C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\security\JwtRequestFilter.java
+C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\security\JwtUtil.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\service\ClientService.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\service\CustomUserDetailsService.java
 C:\Users\leyte\CustomerEDP\java-service\src\main\java\com\customeredp\service\DeliveryService.java
