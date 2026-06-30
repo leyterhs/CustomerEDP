@@ -12,5 +12,28 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  java-service:
+    build: ./java-service
+    container_name: customeredp-java
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/customeredp_db
+      SPRING_DATASOURCE_USERNAME: customer_admin
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: mySuperSecretKey12345678901234567890
+    depends_on:
+      - postgres
+
+  python-service:
+    build: ./python-service
+    container_name: customeredp-python
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://customer_admin:${POSTGRES_PASSWORD}@postgres:5432/customeredp_db
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
