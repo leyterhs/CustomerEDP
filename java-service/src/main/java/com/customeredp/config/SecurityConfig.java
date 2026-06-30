@@ -21,23 +21,33 @@ public class SecurityConfig {
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
+	
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+			// Απενεργοποιούμε το CSRF (δεν το χρειαζόμαστε για stateless REST API)
+			.csrf(csrf -> csrf.disable())
+			
+			// Ορίζουμε ποια endpoints είναι ανοιχτά (χωρίς authentication)
+			.authorizeHttpRequests(authz -> authz
+				// ΜΟΝΟ αυτά τα endpoints είναι προσβάσιμα χωρίς login
+				.requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+				// ΟΛΑ τα υπόλοιπα (συμπεριλαμβανομένου του Swagger) θέλουν authentication
+				.anyRequest().authenticated()
+			)
+			
+			// Λέμε στο Spring Security να χρησιμοποιεί το δικό μας service
+			// για να φορτώνει τους χρήστες από τη Βάση
+			.userDetailsService(customUserDetailsService)
+			
+			// Ενεργοποιούμε το Basic Authentication (username/password)
+			.httpBasic(httpBasic -> {})
+			
+			// Δεν κρατάμε session (stateless) - κάθε request είναι ανεξάρτητο
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authz -> authz
-                // ΜΟΝΟ αυτά τα endpoints είναι ανοιχτά (χωρίς login)
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                // ΟΛΑ τα άλλα (συμπεριλαμβανομένου του Swagger) θέλουν authentication
-                .anyRequest().authenticated()
-            )
-            .userDetailsService(customUserDetailsService)
-            .httpBasic(httpBasic -> {})
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
-    }
+		return http.build();
+	}
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
