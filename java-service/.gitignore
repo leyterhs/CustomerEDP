@@ -1,6 +1,16 @@
+# Java
 target/
 *.jar
 *.war
 *.log
+
+# Spring Boot
+application.properties
+
+# IDE
 .idea/
 *.iml
+.vscode/
+
+# Docker
+*.pid

@@ -1,1 +1,8 @@
+com\customeredp\service\MemberService.class
+com\customeredp\model\Member$Role.class
 com\customeredp\CustomerEdpApplication.class
+com\customeredp\config\SecurityConfig.class
+com\customeredp\controller\AuthController.class
+com\customeredp\repository\MemberRepository.class
+com\customeredp\service\CustomUserDetailsService.class
+com\customeredp\model\Member.class

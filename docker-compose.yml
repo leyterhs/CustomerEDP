@@ -1,29 +1,16 @@
 services:
-  # ==========================================
-  # PostgreSQL Database (Κοινή Βάση για όλα τα services)
-  # ==========================================
   postgres:
     image: postgres:16-alpine
     container_name: customeredp-db
     environment:
       POSTGRES_USER: customer_admin
-      POSTGRES_PASSWORD: Cust@2026#Secure
       POSTGRES_DB: customeredp_db
+      POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
+    command: ["postgres", "-c", "password_encryption=md5", "-c", "listen_addresses=*"]
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - customeredp-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U customer_admin -d customeredp_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-networks:
-  customeredp-network:
-    driver: bridge
 
 volumes:
   postgres_data:
