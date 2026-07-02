@@ -36,6 +36,8 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
 2. Replace `YOUR_PASSWORD_HERE` with your PostgreSQL password (default: `password`)
 
 
+
+
 ### Running the Application
 
 1. Copy `.env.template` to `.env` and set `POSTGRES_PASSWORD`
@@ -47,6 +49,63 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
    mvn clean package -DskipTests
    java -jar target/java-service-0.0.1-SNAPSHOT.jar
    ```
+
+## API Endpoints
+
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Login and receive JWT token |
+
+### Admin (ADMIN only)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/admin/users` | Get all users |
+| POST | `/api/admin/users` | Create a new user |
+| DELETE | `/api/admin/users/{id}` | Delete a user |
+
+### Clients
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/clients` | Get all clients |
+| POST | `/api/clients` | Create a new client |
+| GET | `/api/clients/{id}` | Get a client by ID |
+| PUT | `/api/clients/{id}` | Update a client |
+| DELETE | `/api/clients/{id}` | Delete a client |
+
+### Engagements
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/engagements` | Get all engagements |
+| POST | `/api/engagements` | Create a new engagement |
+| GET | `/api/engagements/{id}` | Get an engagement by ID |
+| PUT | `/api/engagements/{id}` | Update an engagement |
+| DELETE | `/api/engagements/{id}` | Delete an engagement |
+
+### Deliveries
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/deliveries` | Get all deliveries |
+| POST | `/api/deliveries` | Create a new delivery |
+| GET | `/api/deliveries/{id}` | Get a delivery by ID |
+| PUT | `/api/deliveries/{id}` | Update a delivery |
+| DELETE | `/api/deliveries/{id}` | Delete a delivery |
+
+### AI Service (Python)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/ai/suggest/{delivery_id}` | Get AI priority suggestion |
+
+### Report Service (C#)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/report/engagement/{id}` | Download PDF report for an engagement |
+
+> **Note:** All endpoints except `/api/auth/register` and `/api/auth/login` require a JWT token in the `Authorization: Bearer <token>` header.
+
+
+
 
 ### Android App
 
