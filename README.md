@@ -43,3 +43,21 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
    cd java-service
    mvn clean package -DskipTests
    java -jar target/java-service-0.0.1-SNAPSHOT.jar
+   ```
+
+### Android App
+
+### Ρυθμίσεις
+
+1. Άνοιξε το `Config.java` και όρισε το `BASE_URL`:
+   - Για emulator: `http://10.0.2.2:8080/`
+   - Για πραγματικό κινητό: `http://<YOUR_IP>:8080/`
+   - Για ngrok: `https://<YOUR_NGROK_URL>/`
+
+2. Τρέξε το app από το Android Studio.
+
+### Λειτουργίες
+- **Login** με `admin` / `password`
+- **Admin Panel** – Διαχείριση χρηστών (CRUD)
+
+![CustomerEDP Logo](logo.png)
