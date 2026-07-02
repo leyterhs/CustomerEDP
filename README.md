@@ -25,7 +25,10 @@ After starting the application, create an admin user in the database:
 INSERT INTO members (username, email, password, role, created_at) 
 VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ADMIN', NOW());
 ```
+## Android App
 
+Το Android app βρίσκεται σε ξεχωριστό repository:  
+[CustomerEDP-Android](https://github.com/leyterhs/CustomerEDP-Android)
 
 ### Environment Variables
 
