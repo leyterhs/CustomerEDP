@@ -107,7 +107,15 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
 
 
 
-### Android App
+## Android App
+
+Το Android app βρίσκεται στον υποφάκελο `android-app/` (ως Git submodule):  
+[CustomerEDP-Android](https://github.com/leyterhs/CustomerEDP-Android)
+
+Για να το κατεβάσετε μαζί με το κύριο project, χρησιμοποιήστε:
+```bash
+git clone --recursive https://github.com/leyterhs/CustomerEDP.git
+```
 
 ### Ρυθμίσεις
 
