@@ -24,8 +24,9 @@ public class DeliveryService {
     }
 
     public List<Delivery> getDeliveriesByMember(Member member) {
-        return deliveryRepository.findByAssignedTo(member);
-    }
+		// Επιστρέφει ΟΛΑ τα deliveries (χωρίς φιλτράρισμα)
+		return deliveryRepository.findAll();
+	}
 
     public Delivery getDeliveryById(Long id) {
         return deliveryRepository.findById(id)

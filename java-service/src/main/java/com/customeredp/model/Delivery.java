@@ -1,5 +1,6 @@
 package com.customeredp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Delivery {
 
     @Id
@@ -27,6 +29,7 @@ public class Delivery {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "engagement_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "deliveries"})
     private Engagement engagement;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,10 +37,10 @@ public class Delivery {
     private Member assignedTo;
 
     @Column(nullable = false)
-    private String priority = "MEDIUM"; // LOW, MEDIUM, HIGH
+    private String priority = "MEDIUM";
 
     @Column(nullable = false)
-    private String status = "PENDING"; // PENDING, IN_PROGRESS, DONE
+    private String status = "PENDING";
 
     private LocalDate dueDate;
 

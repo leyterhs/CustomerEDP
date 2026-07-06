@@ -46,7 +46,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/register", "/api/auth/login", "/swagger-ui/**", "/api-docs/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()  // <-- ΑΥΤΟ ΑΛΛΑΞΕ: ΔΕΧΕΤΑΙ ΟΛΑ ΤΑ REQUESTS
             )
             .userDetailsService(customUserDetailsService)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

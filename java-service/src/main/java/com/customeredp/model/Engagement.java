@@ -1,5 +1,6 @@
 package com.customeredp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,12 +9,14 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "engagements")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "deliveries"})
 public class Engagement {
 
     @Id
@@ -28,10 +31,11 @@ public class Engagement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "engagements"})
     private Client client;
 
     @Column(nullable = false)
-    private String status = "ACTIVE"; // ACTIVE, COMPLETED, ARCHIVED
+    private String status = "ACTIVE";
 
     @Column(precision = 10, scale = 2)
     private BigDecimal budget;
@@ -44,4 +48,8 @@ public class Engagement {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "engagement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "engagement"})
+    private List<Delivery> deliveries;
 }
