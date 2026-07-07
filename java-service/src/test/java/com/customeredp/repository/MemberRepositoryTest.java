@@ -20,7 +20,8 @@ class MemberRepositoryTest {
         member.setUsername("testuser");
         member.setEmail("test@example.com");
         member.setPassword("password123");
-        member.setRole(Member.Role.MEMBER);
+        // ✅ Αντί για Member.Role.MEMBER, χρησιμοποιούμε String
+        member.setRole("MEMBER");
 
         // 2. Τον αποθηκεύουμε στη ΒΔ
         Member savedMember = memberRepository.save(member);
@@ -31,6 +32,6 @@ class MemberRepositoryTest {
         // 4. Ελέγχουμε ότι βρέθηκε και τα στοιχεία του είναι σωστά
         assertThat(foundMember).isNotNull();
         assertThat(foundMember.getEmail()).isEqualTo("test@example.com");
-        assertThat(foundMember.getRole()).isEqualTo(Member.Role.MEMBER);
+        assertThat(foundMember.getRole()).isEqualTo("MEMBER");
     }
 }

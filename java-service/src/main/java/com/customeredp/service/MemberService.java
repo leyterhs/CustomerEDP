@@ -13,32 +13,31 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public Member registerMember(String username, String email, String rawPassword) {
-        // Έλεγχος αν υπάρχει ήδη χρήστης
-        if (memberRepository.existsByUsername(username)) {
-            throw new RuntimeException("Username already exists");
-        }
-        if (memberRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email already exists");
-        }
-
-        // Δημιουργία νέου μέλους
-        Member member = new Member();
-        member.setUsername(username);
-        member.setEmail(email);
-        member.setPassword(passwordEncoder.encode(rawPassword)); // Κρυπτογράφηση
-        member.setRole(Member.Role.MEMBER); // Default role
-
-        return memberRepository.save(member);
-    }
+    private final PasswordEncoder passwordEncoder; // ✅ Προσθήκη για κρυπτογράφηση
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
 
-    public Optional<Member> findByEmail(String email) {
-        return memberRepository.findByEmail(email);
+    /**
+     * Εγγραφή νέου χρήστη (MEMBER).
+     */
+    public Member registerMember(String username, String email, String rawPassword) {
+        // Έλεγχος αν το username υπάρχει ήδη
+        if (memberRepository.existsByUsername(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+        // Έλεγχος αν το email υπάρχει ήδη
+        if (memberRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Member member = new Member();
+        member.setUsername(username);
+        member.setEmail(email);
+        member.setPassword(passwordEncoder.encode(rawPassword)); // Κρυπτογράφηση
+        member.setRole("MEMBER"); // Default role
+
+        return memberRepository.save(member);
     }
 }

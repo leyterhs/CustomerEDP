@@ -19,7 +19,11 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+    // ✅ ADMIN βλέπει όλους τους clients (case-insensitive)
     public List<Client> getClientsByMember(Member member) {
+        if ("ADMIN".equalsIgnoreCase(member.getRole())) {
+            return clientRepository.findAll();
+        }
         return clientRepository.findByCreatedBy(member);
     }
 
@@ -28,8 +32,20 @@ public class ClientService {
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
     }
 
-    public Client updateClient(Long id, Client updatedClient) {
-        Client existing = getClientById(id);
+    // ✅ ADMIN μπορεί να δει οποιονδήποτε client
+    public Client getClientById(Long id, Member currentUser) {
+        Client client = getClientById(id);
+        if ("ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+            return client;
+        }
+        if (!client.getCreatedBy().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("You are not authorized to view this client");
+        }
+        return client;
+    }
+
+    public Client updateClient(Long id, Client updatedClient, Member currentUser) {
+        Client existing = getClientById(id, currentUser);
         existing.setName(updatedClient.getName());
         existing.setEmail(updatedClient.getEmail());
         existing.setPhone(updatedClient.getPhone());
@@ -37,7 +53,8 @@ public class ClientService {
         return clientRepository.save(existing);
     }
 
-    public void deleteClient(Long id) {
-        clientRepository.deleteById(id);
+    public void deleteClient(Long id, Member currentUser) {
+        Client client = getClientById(id, currentUser);
+        clientRepository.delete(client);
     }
 }

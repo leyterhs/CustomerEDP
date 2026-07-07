@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = '/api';
 
 const getToken = () => localStorage.getItem('token');
 
 // Clients
 export const getClients = () => axios.get(`${API_BASE}/clients`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+});
+export const getClient = (id) => axios.get(`${API_BASE}/clients/${id}`, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
 export const createClient = (data) => axios.post(`${API_BASE}/clients`, data, {
@@ -22,6 +25,9 @@ export const deleteClient = (id) => axios.delete(`${API_BASE}/clients/${id}`, {
 export const getEngagements = () => axios.get(`${API_BASE}/engagements`, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
+export const getEngagement = (id) => axios.get(`${API_BASE}/engagements/${id}`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+});
 export const createEngagement = (data) => axios.post(`${API_BASE}/engagements`, data, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
@@ -36,6 +42,9 @@ export const deleteEngagement = (id) => axios.delete(`${API_BASE}/engagements/${
 export const getDeliveries = () => axios.get(`${API_BASE}/deliveries`, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
+export const getDelivery = (id) => axios.get(`${API_BASE}/deliveries/${id}`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+});
 export const createDelivery = (data) => axios.post(`${API_BASE}/deliveries`, data, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
@@ -46,7 +55,6 @@ export const deleteDelivery = (id) => axios.delete(`${API_BASE}/deliveries/${id}
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
 
-// Default export για τις υπάρχουσες κλάσεις που χρησιμοποιούν το api
 export default {
     get: (url) => axios.get(`${API_BASE}${url}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }

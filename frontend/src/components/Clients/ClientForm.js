@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Card, Spinner } from 'react-bootstrap';
+import { getClient } from '../../services/api';
 
 function ClientForm() {
     const { id } = useParams();
@@ -27,27 +28,26 @@ function ClientForm() {
         }
     }, [id]);
 
-    const loadClient = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/api/clients/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await response.json();
-            if (data) {
-                setFormData({
-                    name: data.name || '',
-                    email: data.email || '',
-                    phone: data.phone || '',
-                    company: data.company || ''
-                });
-            }
-        } catch (error) {
-            console.error('Error loading client:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+	const loadClient = async () => {
+		try {
+			const response = await getClient(id);
+			const data = response.data;
+			console.log('Client data:', data);
+			if (data) {
+				setFormData({
+					name: data.name || '',
+					email: data.email || '',
+					phone: data.phone || '',
+					company: data.company || ''
+				});
+			}
+		} catch (error) {
+			console.error('Error loading client:', error);
+			alert('Failed to load client: ' + error.message);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -67,7 +67,7 @@ function ClientForm() {
         };
 
         try {
-            const url = id ? `http://localhost:8080/api/clients/${id}` : 'http://localhost:8080/api/clients';
+            const url = id ? `/api/clients/${id}` : '/api/clients';
             const method = id ? 'PUT' : 'POST';
             const response = await fetch(url, {
                 method: method,

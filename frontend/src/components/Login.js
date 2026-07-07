@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
 
 function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('admin');
+    const [password, setPassword] = useState('admin');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ function Login() {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -26,6 +26,7 @@ function Login() {
                 setError(data.error || 'Login failed');
             }
         } catch (error) {
+            console.error('Network error:', error);
             setError('Network error: ' + error.message);
         }
     };

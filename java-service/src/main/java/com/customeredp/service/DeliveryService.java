@@ -19,32 +19,49 @@ public class DeliveryService {
         return deliveryRepository.save(delivery);
     }
 
+    // ✅ ADMIN βλέπει όλα τα deliveries, άλλοι μόνο τα δικά τους
+    public List<Delivery> getDeliveriesByMember(Member member) {
+        if ("ADMIN".equalsIgnoreCase(member.getRole())) {
+            return deliveryRepository.findAll();
+        }
+        return deliveryRepository.findByEngagement_Client_CreatedBy(member);
+    }
+
     public List<Delivery> getDeliveriesByEngagement(Engagement engagement) {
         return deliveryRepository.findByEngagement(engagement);
     }
 
-    public List<Delivery> getDeliveriesByMember(Member member) {
-		// Επιστρέφει ΟΛΑ τα deliveries (χωρίς φιλτράρισμα)
-		return deliveryRepository.findAll();
-	}
-
     public Delivery getDeliveryById(Long id) {
         return deliveryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Delivery not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Delivery not found"));
     }
 
-    public Delivery updateDelivery(Long id, Delivery updated) {
-        Delivery existing = getDeliveryById(id);
+    // ✅ ADMIN μπορεί να δει οποιοδήποτε delivery
+    public Delivery getDeliveryById(Long id, Member currentUser) {
+        Delivery delivery = getDeliveryById(id);
+        if ("ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+            return delivery;
+        }
+        // Έλεγχος ότι το delivery ανήκει στον χρήστη (μέσω engagement -> client -> createdBy)
+        if (!delivery.getEngagement().getClient().getCreatedBy().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("You are not authorized to view this delivery");
+        }
+        return delivery;
+    }
+
+    public Delivery updateDelivery(Long id, Delivery updated, Member currentUser) {
+        Delivery existing = getDeliveryById(id, currentUser);
         existing.setTitle(updated.getTitle());
         existing.setDescription(updated.getDescription());
-        existing.setAssignedTo(updated.getAssignedTo());
-        existing.setPriority(updated.getPriority());
         existing.setStatus(updated.getStatus());
+        existing.setPriority(updated.getPriority());
         existing.setDueDate(updated.getDueDate());
+        existing.setEngagement(updated.getEngagement());
         return deliveryRepository.save(existing);
     }
 
-    public void deleteDelivery(Long id) {
-        deliveryRepository.deleteById(id);
+    public void deleteDelivery(Long id, Member currentUser) {
+        Delivery delivery = getDeliveryById(id, currentUser);
+        deliveryRepository.delete(delivery);
     }
 }

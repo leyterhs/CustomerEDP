@@ -10,6 +10,8 @@ import java.util.List;
 
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
+    // ✅ Νέα μέθοδος για να βρίσκει deliveries με βάση τον δημιουργό του client
+    List<Delivery> findByEngagement_Client_CreatedBy(Member member);
+
     List<Delivery> findByEngagement(Engagement engagement);
-    List<Delivery> findByAssignedTo(Member member);
 }

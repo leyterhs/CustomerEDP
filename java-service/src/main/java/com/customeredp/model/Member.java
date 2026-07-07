@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // ✅ Προσθήκη
 public class Member implements UserDetails {
 
     @Id
@@ -28,24 +27,25 @@ public class Member implements UserDetails {
     @Column(unique = true, nullable = false, length = 50)
     private String username;
 
-    @Column(unique = true, nullable = false, length = 100)
-    private String email;
-
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = Role.MEMBER;
+    private String role; // "ADMIN" ή "USER"
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private String email;
+    private String fullName;
 
-    // UserDetails methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
+
+    @Override
+    public String getUsername() { return username; }
+
+    @Override
+    public String getPassword() { return password; }
 
     @Override
     public boolean isAccountNonExpired() { return true; }
@@ -58,9 +58,4 @@ public class Member implements UserDetails {
 
     @Override
     public boolean isEnabled() { return true; }
-
-    // Enum for roles
-    public enum Role {
-        ADMIN, MEMBER
-    }
 }

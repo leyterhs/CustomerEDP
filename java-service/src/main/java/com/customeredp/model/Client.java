@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // ✅ Προσθήκη
 public class Client {
 
     @Id
@@ -32,7 +32,6 @@ public class Client {
     @Column(length = 100)
     private String company;
 
-    // Σχέση με τον χρήστη που τον δημιούργησε
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private Member createdBy;

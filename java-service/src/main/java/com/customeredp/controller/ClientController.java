@@ -4,9 +4,8 @@ import com.customeredp.model.Client;
 import com.customeredp.model.Member;
 import com.customeredp.service.ClientService;
 import com.customeredp.service.MemberService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/clients")
 @RequiredArgsConstructor
-@Tag(name = "Client Controller", description = "CRUD operations for clients")
 public class ClientController {
 
     private final ClientService clientService;
@@ -27,11 +25,10 @@ public class ClientController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         return memberService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @PostMapping
-    @Operation(summary = "Create a new client")
     public ResponseEntity<Client> createClient(@RequestBody Client client) {
         Member currentUser = getAuthenticatedMember();
         Client created = clientService.createClient(client, currentUser);
@@ -39,28 +36,34 @@ public class ClientController {
     }
 
     @GetMapping
-    @Operation(summary = "Get all clients for the current user")
     public ResponseEntity<List<Client>> getMyClients() {
         Member currentUser = getAuthenticatedMember();
         return ResponseEntity.ok(clientService.getClientsByMember(currentUser));
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get a client by ID")
     public ResponseEntity<Client> getClientById(@PathVariable Long id) {
-        return ResponseEntity.ok(clientService.getClientById(id));
+        Member currentUser = getAuthenticatedMember();
+        return ResponseEntity.ok(clientService.getClientById(id, currentUser));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update a client")
     public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
-        return ResponseEntity.ok(clientService.updateClient(id, client));
+        Member currentUser = getAuthenticatedMember();
+        return ResponseEntity.ok(clientService.updateClient(id, client, currentUser));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete a client")
-    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
-        clientService.deleteClient(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+        try {
+            Member currentUser = getAuthenticatedMember();
+            clientService.deleteClient(id, currentUser);
+            return ResponseEntity.ok().body("Client deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting client: " + e.getMessage());
+        }
     }
 }

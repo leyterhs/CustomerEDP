@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { getDeliveries, deleteDelivery } from '../../services/api';
-import { Container, Table, Button, Spinner, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 function DeliveryList() {
     const [deliveries, setDeliveries] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
 
     useEffect(() => {
         loadDeliveries();
     }, []);
 
     const loadDeliveries = async () => {
-        setLoading(true);
         try {
             const response = await getDeliveries();
-            setDeliveries(response.data);
-        } catch (err) {
-            console.error('Error loading deliveries:', err);
-            setError('Failed to load deliveries.');
+            console.log('Deliveries response:', response);
+            console.log('Deliveries data:', response.data);
+            if (Array.isArray(response.data)) {
+                setDeliveries(response.data);
+            } else {
+                console.error('Deliveries data is not an array:', response.data);
+                setDeliveries([]);
+            }
+        } catch (error) {
+            console.error('Error loading deliveries:', error);
+            setDeliveries([]);
         } finally {
             setLoading(false);
         }
@@ -35,31 +38,16 @@ function DeliveryList() {
         }
     };
 
-    if (loading) {
-        return (
-            <Container className="text-center mt-5">
-                <Spinner animation="border" variant="primary" />
-            </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Container className="mt-5">
-                <Alert variant="danger">{error}</Alert>
-            </Container>
-        );
-    }
+    if (loading) return <div>Loading...</div>;
 
     return (
-        <Container className="mt-4">
+        <div>
             <h2>Deliveries</h2>
-            <Link to="/deliveries/new" className="btn btn-primary mb-3">Add Delivery</Link>
-            <Table striped bordered hover responsive>
+            <button onClick={() => window.location.href = '/deliveries/new'}>Add Delivery</button>
+            <table>
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Description</th>
                         <th>Engagement</th>
                         <th>Priority</th>
                         <th>Status</th>
@@ -71,20 +59,19 @@ function DeliveryList() {
                     {deliveries.map(delivery => (
                         <tr key={delivery.id}>
                             <td>{delivery.title}</td>
-                            <td>{delivery.description || ''}</td>
                             <td>{delivery.engagement?.title || 'N/A'}</td>
                             <td>{delivery.priority}</td>
                             <td>{delivery.status}</td>
                             <td>{delivery.dueDate}</td>
                             <td>
-                                <Link to={`/deliveries/${delivery.id}`} className="btn btn-sm btn-warning me-2">Edit</Link>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(delivery.id)}>Delete</Button>
+                                <button onClick={() => window.location.href = `/deliveries/${delivery.id}`}>Edit</button>
+                                <button onClick={() => handleDelete(delivery.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
-            </Table>
-        </Container>
+            </table>
+        </div>
     );
 }
 

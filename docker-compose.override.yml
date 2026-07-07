@@ -1,0 +1,19 @@
+services:
+  postgres:
+    environment:
+      POSTGRES_USER: ${DB_USER:-customer_admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-customeredp_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+  backend:
+    build: ./java-service   # ✅ ΠΡΟΣΘΗΚΗ
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-dev}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-customeredp_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-customer_admin}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-password}
+      JWT_SECRET: ${JWT_SECRET:-defaultSecret}
+    ports:
+      - "8083:8080"

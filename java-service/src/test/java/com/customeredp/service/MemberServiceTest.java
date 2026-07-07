@@ -43,7 +43,8 @@ class MemberServiceTest {
         savedMember.setUsername(username);
         savedMember.setEmail(email);
         savedMember.setPassword(encodedPassword);
-        savedMember.setRole(Member.Role.MEMBER);
+        // ✅ Αντί για Member.Role.MEMBER, χρησιμοποιούμε String
+        savedMember.setRole("MEMBER");
 
         when(memberRepository.save(any(Member.class))).thenReturn(savedMember);
 
@@ -55,7 +56,7 @@ class MemberServiceTest {
         assertEquals(username, result.getUsername());
         assertEquals(email, result.getEmail());
         assertEquals(encodedPassword, result.getPassword());
-        assertEquals(Member.Role.MEMBER, result.getRole());
+        assertEquals("MEMBER", result.getRole());
         verify(memberRepository).save(any(Member.class));
     }
 
@@ -81,6 +82,7 @@ class MemberServiceTest {
         String username = "testuser";
         Member member = new Member();
         member.setUsername(username);
+        member.setRole("MEMBER"); // ✅ String
 
         when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
 

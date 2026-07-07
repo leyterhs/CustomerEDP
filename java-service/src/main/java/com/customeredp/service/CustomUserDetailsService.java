@@ -2,11 +2,14 @@ package com.customeredp.service;
 
 import com.customeredp.model.Member;
 import com.customeredp.repository.MemberRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -22,10 +25,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        return User.builder()
-                .username(member.getUsername())
-                .password(member.getPassword())
-                .roles(member.getRole().name())
-                .build();
+        // ✅ Προσθέτουμε ένα authority με βάση τον ρόλο του χρήστη
+        return new User(
+                member.getUsername(),
+                member.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_" + member.getRole()))
+        );
     }
 }
