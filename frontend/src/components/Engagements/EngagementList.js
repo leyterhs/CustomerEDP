@@ -14,11 +14,11 @@ function EngagementList() {
 
     const loadEngagements = async () => {
         try {
-            console.log('🔍 Fetching engagements...');
+            console.log('Fetching engagements...');
             const response = await getEngagements();
-            console.log('✅ Raw response:', response);
-            console.log('📦 Response data:', response.data);
-            console.log('📊 Is array?', Array.isArray(response.data));
+            console.log('Raw response:', response);
+            console.log('Response data:', response.data);
+            console.log('Is array?', Array.isArray(response.data));
             
             if (response.data && Array.isArray(response.data)) {
                 setEngagements(response.data);
@@ -26,11 +26,11 @@ function EngagementList() {
                     setError('No engagements found. Create your first engagement!');
                 }
             } else {
-                console.error('❌ Unexpected response format:', response);
+                console.error('Unexpected response format:', response);
                 setError('Invalid response format from server');
             }
         } catch (error) {
-            console.error('❌ Error loading engagements:', error);
+            console.error('Error loading engagements:', error);
             if (error.response && error.response.status === 403) {
                 setError('You do not have permission to view engagements. Only ADMIN users can view.');
             } else {
@@ -48,7 +48,7 @@ function EngagementList() {
             setEngagements(engagements.filter(e => e.id !== id));
             setError(null);
         } catch (err) {
-            console.error('❌ Delete failed:', err);
+            console.error('Delete failed:', err);
             if (err.response && err.response.status === 403) {
                 setError('You do not have permission to delete this engagement. Only ADMIN users can delete.');
             } else {

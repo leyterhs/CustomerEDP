@@ -38,9 +38,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ΕΔΩ
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/clients/**").authenticated()
-                .requestMatchers("/api/engagements/**").authenticated()
-                .requestMatchers("/api/deliveries/**").authenticated()
+				.requestMatchers("/api/clients/**").hasAnyRole("ADMIN", "MEMBER")
+				.requestMatchers("/api/engagements/**").hasAnyRole("ADMIN", "MEMBER")
+				.requestMatchers("/api/deliveries/**").hasAnyRole("ADMIN", "MEMBER")
 				.requestMatchers("/api/auth/register").permitAll()
 				.requestMatchers("/api/auth/**", "/api/auth/register", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
