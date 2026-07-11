@@ -8,7 +8,7 @@ services:
       - "${DB_PORT:-5432}:5432"
 
   backend:
-    build: ./java-service   # ✅ ΠΡΟΣΘΗΚΗ
+    build: ./java-service
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-dev}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-customeredp_db}

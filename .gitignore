@@ -6,6 +6,8 @@ target/
 
 # Spring Boot
 application.properties
+application-prod.properties
+application-uat.properties
 
 # IDE
 .idea/
@@ -16,3 +18,5 @@ application.properties
 *.pid
 
 .env
+.env.prod
+.env.uat

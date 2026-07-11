@@ -17,7 +17,7 @@ class MemberRepositoryTest {
     void testSaveAndFindMember() {
         // 1. Δημιουργούμε έναν νέο χρήστη
         Member member = new Member();
-        member.setUsername("testuser");
+        member.setUsername("testuser_" + System.currentTimeMillis());
         member.setEmail("test@example.com");
         member.setPassword("password123");
         // ✅ Αντί για Member.Role.MEMBER, χρησιμοποιούμε String

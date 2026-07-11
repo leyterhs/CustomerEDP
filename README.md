@@ -7,24 +7,29 @@ Polyglot Microservices project with:
 - C# (.NET) - Reporting
 - React - Frontend Dashboard
 
-
 ## Configuration
 
 ### Database & Credentials
 
 1. Copy `src/main/resources/application.properties.template` to `src/main/resources/application.properties`
 2. Replace `YOUR_PASSWORD_HERE` with your PostgreSQL password (default: `password`)
-3. Replace `YOUR_JWT_SECRET_HERE` with a secret key for JWT (e.g., `mySuperSecretKey1234567890`)
-
+3. Replace `YOUR_JWT_SECRET_HERE` with a secret key for JWT (e.g., `mySuperSecretKey12345678901234567890`)
 
 ### Default Admin User
 
-After starting the application, create an admin user in the database:
+The application **automatically creates** a default admin user on first startup via an internal DataLoader.
 
-```sql
-INSERT INTO members (username, email, password, role, created_at) 
-VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ADMIN', NOW());
-```
+**Default credentials:**
+- **Username:** `admin`
+- **Password:** `admin`
+
+> **Manual fallback (if auto-creation fails):**  
+> If for any reason the admin is missing, you can insert it manually using the following SQL command inside the PostgreSQL container:
+> ```sql
+> INSERT INTO members (username, email, password, role, created_at) 
+> VALUES ('admin', 'admin@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5E', 'ADMIN', NOW());
+> ```
+
 ## Android App
 
 Το Android app βρίσκεται σε ξεχωριστό repository:  
@@ -34,9 +39,6 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
 
 1. Copy `.env.template` to `.env`
 2. Replace `YOUR_PASSWORD_HERE` with your PostgreSQL password (default: `password`)
-
-
-
 
 ### Running the Application
 
@@ -49,6 +51,28 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
    mvn clean package -DskipTests
    java -jar target/java-service-0.0.1-SNAPSHOT.jar
    ```
+
+### Running Locally (Outside Docker)
+
+If you prefer to run the Java backend directly on your machine (e.g., for faster development):
+
+1. Make sure the PostgreSQL container is running via `docker-compose up -d postgres`.
+2. Ensure the following environment variables are set in your terminal/IDE:
+   - `POSTGRES_PASSWORD` (default: `password`)
+   - `JWT_SECRET` (default: `mySuperSecretKey12345678901234567890`)
+3. Navigate to the `java-service` folder and run:
+   ```bash
+   mvn clean spring-boot:run -DskipTests
+   ```
+
+> **Note:** The local server (outside Docker) starts on port `8080`, while the Dockerized version uses port `8081` (as defined in `docker-compose.yml`).
+
+### Running Tests
+To run the unit tests for the Java backend:
+```bash
+cd java-service
+mvn clean test
+```
 
 ## API Endpoints
 
@@ -104,8 +128,14 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
 
 > **Note:** All endpoints except `/api/auth/register` and `/api/auth/login` require a JWT token in the `Authorization: Bearer <token>` header.
 
+## API Documentation (Swagger)
 
+Interactive API documentation is available via Swagger UI.
 
+- **Local (Direct Run):** `http://localhost:8080/swagger-ui/index.html`
+- **Local (Docker):** `http://localhost:8081/swagger-ui/index.html`
+
+You can test all endpoints directly from the browser. Click the **"Authorize"** button at the top right and enter your JWT token (obtained from `/api/auth/login`) to authenticate.
 
 ## Android App
 
@@ -115,19 +145,33 @@ VALUES ('admin', 'admin@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZ
 Για να το κατεβάσετε μαζί με το κύριο project, χρησιμοποιήστε:
 ```bash
 git clone --recursive https://github.com/leyterhs/CustomerEDP.git
-```
+	```
 
 ### Ρυθμίσεις
 
-1. Άνοιξε το `Config.java` και όρισε το `BASE_URL`:
-   - Για emulator: `http://10.0.2.2:8080/`
-   - Για πραγματικό κινητό: `http://<YOUR_IP>:8080/`
-   - Για ngrok: `https://<YOUR_NGROK_URL>/`
+1. **Android**: Άνοιξε το `android-app/gradle.properties` και όρισε το `BASE_URL`:
+   - Για emulator: `BASE_URL=http://10.0.2.2:8081/`
+   - Για πραγματικό κινητό: `BASE_URL=http://<YOUR_IP>:8081/`
+   - Για ngrok: `BASE_URL=https://<YOUR_NGROK_URL>/`
+   (Θα χρειαστεί **Build → Rebuild Project** στο Android Studio για να εφαρμοστεί).
 
-2. Τρέξε το app από το Android Studio.
+2. **Backend (CORS)**: Άνοιξε το `application.properties` και πρόσθεσε (ή τροποποίησε) την ιδιότητα `cors.allowed.origins` ώστε να περιλαμβάνει το domain σου (π.χ. το ngrok URL σου).
+   Παράδειγμα:
+   ```properties
+	cors.allowed.origins=http://localhost:3000,http://localhost:8080,https://tapioca-resistant-grooving.ngrok-free.dev
+	```
+	
+### Production & UAT Environments
+
+To run the application with UAT or Production profiles, use the provided batch scripts:
+
+- **UAT:** `run-uat.bat`
+- **Production:** `run-prod.bat`
+
+These scripts load the respective environment files (`.env.uat` / `.env.prod`) and start the Docker containers with the appropriate configuration.
 
 ### Λειτουργίες
-- **Login** με `admin` / `password`
+- **Login** με `admin` / `admin`
 - **Admin Panel** – Διαχείριση χρηστών (CRUD)
 
 ![CustomerEDP Logo](logo.png)

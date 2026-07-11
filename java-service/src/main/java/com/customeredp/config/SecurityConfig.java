@@ -36,11 +36,12 @@ public class SecurityConfig {
             .cors(cors -> cors.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ ΕΔΩ
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ΕΔΩ
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/clients/**").authenticated()
                 .requestMatchers("/api/engagements/**").authenticated()
                 .requestMatchers("/api/deliveries/**").authenticated()
+				.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())
