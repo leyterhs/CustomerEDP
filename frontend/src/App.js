@@ -13,26 +13,36 @@ import DeliveryForm from './components/Deliveries/DeliveryForm';
 
 function App() {
     return (
-        <BrowserRouter>
-            <AppNavbar />
-            <div className="container mt-4">
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/admin" element={<AdminPanel />} />
-                    <Route path="/clients" element={<ClientList />} />
-                    <Route path="/clients/new" element={<ClientForm />} />
-                    <Route path="/clients/:id" element={<ClientForm />} />
-                    <Route path="/engagements" element={<EngagementList />} />
-                    <Route path="/engagements/new" element={<EngagementForm />} />
-                    <Route path="/engagements/:id" element={<EngagementForm />} />
-                    <Route path="/deliveries" element={<DeliveryList />} />
-                    <Route path="/deliveries/new" element={<DeliveryForm />} />
-                    <Route path="/deliveries/:id" element={<DeliveryForm />} />
-                    <Route path="/" element={<Navigate to="/login" />} />
-                </Routes>
-            </div>
-        </BrowserRouter>
+        <>
+            {/* Animated background */}
+            <div className="animated-bg"></div>
+
+            {/* Watermark */}
+            <div className="watermark">EDP</div>
+
+            {/* Main app */}
+            <BrowserRouter>
+                <AppNavbar />
+                <div className="container mt-4">
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/admin" element={<AdminPanel />} />
+						<Route path="/admin/users/:id/edit" element={<Register />} />
+                        <Route path="/clients" element={<ClientList />} />
+                        <Route path="/clients/new" element={<ClientForm />} />
+                        <Route path="/clients/:id" element={<ClientForm />} />
+                        <Route path="/engagements" element={<EngagementList />} />
+                        <Route path="/engagements/new" element={<EngagementForm />} />
+                        <Route path="/engagements/:id" element={<EngagementForm />} />
+                        <Route path="/deliveries" element={<DeliveryList />} />
+                        <Route path="/deliveries/new" element={<DeliveryForm />} />
+                        <Route path="/deliveries/:id" element={<DeliveryForm />} />
+                        <Route path="/" element={<Navigate to="/login" />} />
+                    </Routes>
+                </div>
+            </BrowserRouter>
+        </>
     );
 }
 

@@ -126,6 +126,12 @@ mvn clean test
 |--------|----------|-------------|
 | GET | `/api/report/engagement/{id}` | Download PDF report for an engagement |
 
+> **Example:** Download a PDF report for engagement with ID `1`:
+> ```bash
+> curl -X GET http://localhost:5000/api/report/engagement/1 -H "Authorization: Bearer <YOUR_JWT_TOKEN>" --output report.pdf
+> ```
+> The PDF will be saved as `report.pdf` in the current directory.
+
 > **Note:** All endpoints except `/api/auth/register` and `/api/auth/login` require a JWT token in the `Authorization: Bearer <token>` header.
 
 ## API Documentation (Swagger)

@@ -1,8 +1,13 @@
 import axios from 'axios';
 
-const API_BASE = '/api';
+const API_BASE = process.env.REACT_APP_API_URL 
+    ? `${process.env.REACT_APP_API_URL}/api` 
+    : 'http://localhost:8080/api';
 
 const getToken = () => localStorage.getItem('token');
+
+console.log('API_BASE is:', API_BASE);
+console.log('Token exists?', !!localStorage.getItem('token'));
 
 // Clients
 export const getClients = () => axios.get(`${API_BASE}/clients`, {
@@ -55,7 +60,22 @@ export const deleteDelivery = (id) => axios.delete(`${API_BASE}/deliveries/${id}
     headers: { 'Authorization': `Bearer ${getToken()}` }
 });
 
-export default {
+// ============ USERS (Admin) ============
+
+export const getUsers = () => axios.get(`${API_BASE}/admin/users`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+});
+
+export const deleteUser = (id) => axios.delete(`${API_BASE}/admin/users/${id}`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+});
+
+export const createUser = (data) => axios.post(`${API_BASE}/admin/users`, data, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+});
+
+// Default export (για τα components που το χρησιμοποιούν)
+const apiService = {
     get: (url) => axios.get(`${API_BASE}${url}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     }),
@@ -69,3 +89,5 @@ export default {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     })
 };
+
+export default apiService;

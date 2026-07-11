@@ -16,7 +16,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // Χρησιμοποιούμε ΣΤΑΘΕΡΟ secret key (όχι τυχαίο)
+    private static final Key SECRET_KEY = Keys.hmacShaKeyFor("mySuperSecretKey12345678901234567890".getBytes());
     private static final long EXPIRATION_TIME = 86400000; // 24h
 
     public String generateToken(UserDetails userDetails) {
