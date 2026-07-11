@@ -156,8 +156,8 @@ git clone --recursive https://github.com/leyterhs/CustomerEDP.git
 ### Ρυθμίσεις
 
 1. **Android**: Άνοιξε το `android-app/gradle.properties` και όρισε το `BASE_URL`:
-   - Για emulator: `BASE_URL=http://10.0.2.2:8081/`
-   - Για πραγματικό κινητό: `BASE_URL=http://<YOUR_IP>:8081/`
+   - Για emulator: `BASE_URL=http://10.0.2.2:8080/`
+   - Για πραγματικό κινητό: `BASE_URL=http://<YOUR_IP>:8080/`
    - Για ngrok: `BASE_URL=https://<YOUR_NGROK_URL>/`
    (Θα χρειαστεί **Build → Rebuild Project** στο Android Studio για να εφαρμοστεί).
 
